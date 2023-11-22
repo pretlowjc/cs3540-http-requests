@@ -1,30 +1,34 @@
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import Post from '../app/models/post.model';
 
+@Injectable({
+    providedIn: 'root'
+})
+
 export class BlogService {
+    private apiEndpoint = 'http://localhost:3000/api/blog';
+
     constructor(private http: HttpClient) { }
 
-    // get method...
-    getPosts(): Observable<{ post: Post }> {
-        return this.http.get<{ post: Post }>('http://localhost:3000/api/blog/');
+    getPosts(): Observable<{ post: Post[] }> {
+        return this.http.get<{ post: Post[] }>(`${this.apiEndpoint}`);
     }
 
-    // put method...technically more like an edit...
-    putPost(title: string, post: Post): Observable<{ post: Post}> {
-        // path not correct!
-        return this.http.put<{ post: Post }>('http://localhost:3000/api/blog/', post);
+    getPostByTitle(title: string): Observable<{ post: Post | null }> {
+        return this.http.get<{ post: Post | null }>(`${this.apiEndpoint}/${title}`);
     }
 
-    // post method
-    postPost(post: Post): Observable<{ post: Post}> {
-        // path not correct!
-        return this.http.post<{ post: Post }>('http://localhost:3000/api/blog/', post);
+    addPost(post: Post): Observable<{ post: Post }> {
+        return this.http.post<{ post: Post }>(`${this.apiEndpoint}`, post);
     }
 
-    // delete method...
-    deletePost(id: string): Observable<{ post: Post }> {
-        // path not correct!
-        return this.http.delete<{ post: Post }>('http://localhost:3000/api/blog/');
+    editPost(originalTitle: string, updatedPost: any): Observable<{ success: boolean }> {
+        return this.http.put<{ success: boolean }>(`${this.apiEndpoint}/${originalTitle}/edit`, updatedPost);
+    }
+
+    deletePost(title: string): Observable<{ success: boolean }> {
+        return this.http.delete<{ success: boolean }>(`${this.apiEndpoint}/${title}`);
     }
 }
