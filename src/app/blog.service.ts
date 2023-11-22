@@ -16,8 +16,8 @@ export class BlogService {
         return this.http.get<{ post: Post[] }>(`${this.apiEndpoint}`);
     }
 
-    getPostByTitle(title: string): Observable<{ post: Post | null }> {
-        return this.http.get<{ post: Post | null }>(`${this.apiEndpoint}/${title}`);
+    getPostByTitle(title: string): Observable<{ post: Post }> {
+        return this.http.get<{ post: Post }>(`${this.apiEndpoint}/${title}`);
     }
 
     addPost(post: Post): Observable<{ post: Post }> {
